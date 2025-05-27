@@ -62,9 +62,7 @@ function initializeServiceWorker() {
       .then(() => {
         console.log('Service worker registration successful');
       })
-      .catch(() => {
-        console.error('Service worker registration failed');
-      })
+      .catch(err => console.error('Service worker registration failed: ', err));
   });
 }
 
