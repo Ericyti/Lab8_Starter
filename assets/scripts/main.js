@@ -45,25 +45,24 @@ function initializeServiceWorker() {
   // We first must register our ServiceWorker here before any of the code in
   // sw.js is executed.
   // B1. TODO - Check if 'serviceWorker' is supported in the current browser
-  if (!('serviceWorker' in navigator)) {
-    return;
+  if ('serviceWorker' in navigator) {
+    // B2. TODO - Listen for the 'load' event on the window object.
+    window.addEventListener('load', () => {
+    // Steps B3-B6 will be *inside* the event listener's function created in B2
+    // B3. TODO - Register './sw.js' as a service worker (The MDN article
+    //            "Using Service Workers" will help you here)
+    // B4. TODO - Once the service worker has been successfully registered, console
+    //            log that it was successful.
+    // B5. TODO - In the event that the service worker registration fails, console
+    //            log that it has failed.
+    // STEPS B6 ONWARDS WILL BE IN /sw.js
+      navigator.serviceWorker.register("./sw.js")
+        .then(() => {
+          console.log('Service worker registration successful');
+        })
+        .catch(err => console.error('Service worker registration failed: ', err));
+    });
   }
-  // B2. TODO - Listen for the 'load' event on the window object.
-  window.addEventListener('load', () => {
-  // Steps B3-B6 will be *inside* the event listener's function created in B2
-  // B3. TODO - Register './sw.js' as a service worker (The MDN article
-  //            "Using Service Workers" will help you here)
-  // B4. TODO - Once the service worker has been successfully registered, console
-  //            log that it was successful.
-  // B5. TODO - In the event that the service worker registration fails, console
-  //            log that it has failed.
-  // STEPS B6 ONWARDS WILL BE IN /sw.js
-    navigator.serviceWorker.register("./sw.js")
-      .then(() => {
-        console.log('Service worker registration successful');
-      })
-      .catch(err => console.error('Service worker registration failed: ', err));
-  });
 }
 
 /**
@@ -96,7 +95,7 @@ async function getRecipes() {
 
   const newRecipes = [];
   return new Promise(async (resolve, reject) => {
-    for (const url of RECIPE_URLS) {
+    for (const url in RECIPE_URLS) {
       try {
         const fetched = await fetch(url);
         const recipe = await fetched.json();
@@ -108,7 +107,7 @@ async function getRecipes() {
       } 
       catch (err) {
         console.error('Error')
-        return reject(err)
+        reject(err)
       }
     }
   });
